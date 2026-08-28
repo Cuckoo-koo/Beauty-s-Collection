@@ -5,29 +5,73 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Beauty's Collection</title>
   <style>
-    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#fdfdfd; }
-    header { background:#e6b8c3; padding:20px; text-align:center; }
-    nav { background:#333; padding:10px; text-align:center; }
-    nav a { color:#fff; margin:0 15px; text-decoration:none; }
-    .products { display:flex; flex-wrap:wrap; justify-content:center; padding:20px; }
-    .product { border:1px solid #ddd; border-radius:5px; margin:15px; width:250px; text-align:center; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
-    .product img { width:100%; height:auto; border-bottom:1px solid #ddd; }
-    .product h3 { margin:10px 0; }
-    .cart { background:#f4f4f4; padding:20px; }
+    body { font-family: 'Segoe UI', sans-serif; margin:0; padding:0; background:#fffafc; color:#333; }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, #f8cdda, #f1a7f1);
+      text-align:center; padding:80px 20px; color:#fff;
+    }
+    .hero h1 { font-size:3em; margin-bottom:10px; }
+    .hero p { font-size:1.2em; margin-bottom:20px; }
+    .shop-btn {
+      background:#fff; color:#d6336c; border:none; padding:12px 25px;
+      font-size:18px; border-radius:30px; cursor:pointer; transition:0.3s;
+    }
+    .shop-btn:hover { background:#d6336c; color:#fff; }
+
+    /* Navigation */
+    nav { background:#333; padding:12px; text-align:center; }
+    nav a { color:#fff; margin:0 15px; text-decoration:none; font-weight:500; }
+    nav a:hover { color:#f8cdda; }
+
+    /* Products Grid */
+    .products { display:flex; flex-wrap:wrap; justify-content:center; padding:40px 20px; }
+    .product {
+      border-radius:12px; overflow:hidden; transition:transform 0.3s;
+      margin:15px; width:260px; background:#fff; box-shadow:0 4px 12px rgba(0,0,0,0.1);
+    }
+    .product:hover { transform:scale(1.05); box-shadow:0 8px 20px rgba(0,0,0,0.15); }
+    .product img { width:100%; height:auto; }
+    .product h3 { margin:15px 0 5px; font-size:1.2em; }
+    .product p { margin:0 0 10px; color:#555; }
+    .product button {
+      background:#d6336c; color:#fff; border:none; padding:10px 20px;
+      margin-bottom:15px; border-radius:25px; cursor:pointer; transition:0.3s;
+    }
+    .product button:hover { background:#a61e4d; }
+
+    /* Cart */
+    .cart { background:#f4f4f4; padding:30px; text-align:center; }
     .cart h2 { margin-top:0; }
-    .cart-items { margin-bottom:15px; }
-    .checkout-btn { background:#e6b8c3; border:none; padding:10px 20px; cursor:pointer; font-size:16px; }
-    .upload-form { background:#fff3f7; padding:20px; margin:20px; border:1px solid #ddd; }
-    .upload-form input { margin:5px; padding:8px; }
+    .checkout-btn {
+      background:#d6336c; color:#fff; border:none; padding:12px 25px;
+      font-size:18px; border-radius:30px; cursor:pointer; transition:0.3s;
+    }
+    .checkout-btn:hover { background:#a61e4d; }
+
+    /* Upload Form (admin only) */
+    .upload-form { background:#fff3f7; padding:20px; margin:20px; border:1px solid #ddd; border-radius:12px; }
+    .upload-form input { margin:5px; padding:10px; border-radius:8px; border:1px solid #ccc; }
+    .upload-form button {
+      background:#d6336c; color:#fff; border:none; padding:10px 20px;
+      border-radius:25px; cursor:pointer; transition:0.3s;
+    }
+    .upload-form button:hover { background:#a61e4d; }
+
+    footer { background:#333; color:#fff; text-align:center; padding:20px; margin-top:40px; }
   </style>
 </head>
 <body>
 
-  <header>
+  <!-- Hero Banner -->
+  <header class="hero">
     <h1>Beauty's Collection</h1>
-    <p>Sarees • Jewellery • Embroidery</p>
+    <p>Discover timeless Sarees, elegant Jewellery & handcrafted Embroidery</p>
+    <button class="shop-btn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">Shop Now</button>
   </header>
 
+  <!-- Navigation -->
   <nav>
     <a href="#">Home</a>
     <a href="#">Sarees</a>
@@ -36,7 +80,7 @@
     <a href="#">Contact</a>
   </nav>
 
-  <!-- Upload Form (visible only to owner if auth is added) -->
+  <!-- Upload Form (admin use) -->
   <section class="upload-form">
     <h2>Add New Product</h2>
     <input type="text" id="product-name" placeholder="Product Name">
