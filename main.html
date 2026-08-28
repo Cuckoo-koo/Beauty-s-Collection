@@ -193,9 +193,79 @@
         document.getElementById('upload-form').style.display = 'block';
       }
     }
+// Admin Logout
+async function logout() {
+  const { error } = await supabaseClient.auth.signOut();
+  if(error) {
+    alert("Logout failed: " + error.message);
+  } else {
+    alert("Logged out successfully!");
+    document.getElementById('upload-form').style.display = 'none';
+  }
+}
 
+// Check if already logged in (auto-show upload form)
+async function checkAuth() {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if(user) {
+    document.getElementById('upload-form').style.display = 'block';
+  } else {
+    document.getElementById('upload-form').style.display = 'none';
+  }
+}
+
+// Upload Product (admin only)
+async function addNewProduct() {
+  const name = document.getElementById('product-name').value;
+  const price = document.getElementById('product-price').value;
+  const image = document.getElementById('product-image').value;
+
+  if(!name || !price || !image) {
+    alert("Please fill all fields!");
+    return;
+  }
+
+  const { data, error } = await supabaseClient
+    .from('products')
+    .insert([{ name, price, image_url: image }]);
+
+  if(error) {
+    alert("Error uploading product: " + error.message);
+  } else {
+    alert("Product uploaded successfully!");
     loadProducts();
-    checkAuth();
+  }
+}
+
+// Load Products
+async function loadProducts() {
+  const { data, error } = await supabaseClient
+    .from('products')
+    .select('*');
+
+  if(error) {
+    console.error(error);
+    return;
+  }
+
+  const productsDiv = document.getElementById('products');
+  productsDiv.innerHTML = '';
+  data.forEach(product => {
+    productsDiv.innerHTML += `
+      <div class="product">
+        <img src="${product.image_url}" alt="${product.name}">
+        <h3>${product.name}</h3>
+        <p>₹${product.price}</p>
+        <button onclick="addToCart('${product.name}', '${product.price}')">Add to Cart</button>
+      </div>
+    `;
+  });
+}
+
+// Run on page load
+loadProducts();
+checkAuth();
+
   </script>
 
 </body>
