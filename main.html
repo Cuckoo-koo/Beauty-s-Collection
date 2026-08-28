@@ -1,703 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <!-- SECURITY WARNING: For production, do NOT use localStorage for sensitive data. 
-         Use a real database and backend (PHP/Node.js/Python). -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vastra - Premium Indian Fashion & Embellishments</title>
-    
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
-
-    <style>
-        /* --- CSS Variables for Theme --- */
-        :root {
-            --primary: #8B0036;
-            --primary-light: #9c2f57;
-            --gold: #D4AF37;
-            --gold-light: #F5DEB3;
-            --secondary: #FFE4C4;
-            --dark: #1A1A2E;
-            --text: #333333;
-            --white: #FFFFFF;
-            --accent: #FF6B9D;
-            --shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-
-        /* --- Base Styles --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Noto Sans Devanagari', serif;
-            background: linear-gradient(135deg, var(--dark) 0%, #2D1B4E 100%);
-            color: var(--white);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* --- Scrollbar Styling --- */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--dark); }
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(var(--primary), var(--accent));
-            border-radius: 4px;
-        }
-
-        /* --- Animations --- */
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-
-        /* --- Hero Section --- */
-        .hero {
-            position: relative; height: 85vh; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .hero::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(135deg, rgba(139,0,54,0.8) 0%, rgba(212,175,55,0.3) 50%, rgba(10,6,28,0.9) 100%);
-            background-size: 200% 200%; animation: heroPulse 4s ease-in-out infinite;
-        }
-
-        @keyframes heroPulse {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        .hero-content { z-index: 2; padding: 40px; max-width: 800px; }
-
-        .hero h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2.5rem, 6vw, 4.5rem); margin-bottom: 20px; text-shadow: 3px 3px 6px rgba(0,0,0,0.5); line-height: 1.1;
-        }
-
-        .hero h1 span { background: linear-gradient(90deg, var(--gold), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-        .hero p { font-size: 1.2rem; max-width: 600px; margin: 0 auto 30px; opacity: 0.9; }
-
-        /* --- Buttons --- */
-        .cta-btn, .btn-primary, .btn-danger {
-            padding: 15px 30px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.3s; border: none;
-            text-transform: uppercase; letter-spacing: 1px;
-        }
-
-        .btn-primary { background: var(--gold); color: var(--dark); }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(212,175,55,0.4); }
-        
-        .btn-danger { background: var(--primary); color: white; margin-left: 10px; }
-        .btn-danger:hover { background: #6b0027; }
-
-        /* --- Navigation --- */
-        nav {
-            position: sticky; top: 0; background: rgba(26,26,46,0.95); backdrop-filter: blur(10px); z-index: 1000; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
-
-        .logo { font-size: 1.8rem; font-weight: bold; color: var(--gold); text-decoration: none; letter-spacing: 2px; cursor: pointer; }
-        
-        .nav-links { display: flex; gap: 30px; }
-        .nav-links a { color: var(--white); text-decoration: none; font-weight: 500; transition: color 0.3s; position: relative; }
-        .nav-links a:hover { color: var(--gold); }
-
-        /* Admin Link */
-        .admin-link { margin-left: auto; cursor: pointer !important; border: 1px solid var(--accent) !important; padding: 5px 10px; }
-        
-        .cart-icon { position: relative; cursor: pointer; padding: 10px; transition: transform 0.2s; }
-        .cart-icon:hover { transform: scale(1.1); }
-        
-        .cart-count { position: absolute; top: 5px; right: 5px; background: var(--accent); color: white; font-size: 0.7rem; font-weight: bold; padding: 3px 8px; border-radius: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-
-        /* --- Featured Products --- */
-        .featured { max-width: 1400px; margin: 60px auto; padding: 0 20px; }
-
-        .section-title { font-family: 'Playfair Display', serif; font-size: 2.5rem; text-align: center; margin-bottom: 50px; position: relative; display: inline-block; left: 50%; transform: translateX(-50%); }
-        
-        .section-title::after { content: ''; display: block; width: 80px; height: 3px; background: var(--gold); margin: 15px auto 0; }
-
-        /* Product Grid */
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
-
-        .product-card {
-            background: rgba(255, 255, 255, 0.05); border-radius: 16px; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; border: 1px solid rgba(255, 255, 255, 0.05); display: flex; flex-direction: column;
-        }
-
-        .product-card:hover { transform: translateY(-10px); box-shadow: var(--shadow); border-color: var(--gold); }
-
-        /* Product Image Area - Using input for file upload */
-        .product-image-wrapper { height: 250px; display: flex; align-items: center; justify-content: center; background: linear-gradient(45deg, var(--primary), var(--secondary)); position: relative; overflow: hidden; }
-
-        .saree-bg { background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.1) 0px, rgba(255,255,255,0.1) 1px, transparent 1px, transparent 10px); }
-        .jewelry-bg { background-image: radial-gradient(circle at 50% 50%, var(--gold), transparent); }
-
-        .product-info { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
-
-        .product-category { font-size: 0.8rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
-
-        .product-title { font-size: 1.2rem; margin-bottom: 10px; color: var(--white); }
-
-        .product-price { font-size: 1.1rem; color: var(--gold-light); font-weight: bold; margin-bottom: 15px; }
-
-        .add-to-cart, .edit-btn, .delete-btn { width: 100%; padding: 12px; margin-top: auto; transition: all 0.3s; border-radius: 8px; cursor: pointer; font-weight: bold; border: none; }
-        
-        .add-to-cart { background: transparent; border: 1px solid var(--gold); color: white; }
-        .add-to-cart:hover { background: var(--gold); border-color: var(--gold); color: var(--dark); }
-
-        .edit-btn { background: rgba(255,255,255,0.1); color: var(--gold); margin-top: 10px; font-size: 0.9rem; }
-        .delete-btn { background: var(--primary); color: white; font-size: 0.8rem; }
-        .delete-btn:hover { background: #6b0027; }
-
-        /* --- Admin Panel (Modal) --- */
-        .admin-modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 3000; background: rgba(0,0,0,0.9); padding: 30px;
-            box-sizing: border-box; overflow-y: auto;
-        }
-
-        .admin-modal.active { display: block; animation: fadeIn 0.3s; }
-
-        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--accent); padding-bottom: 20px; }
-
-        .admin-header h2 { color: var(--accent); font-family: 'Playfair Display', serif; }
-
-        /* Admin Form */
-        .form-group { margin-bottom: 20px; }
-        
-        .form-group label { display: block; margin-bottom: 8px; color: var(--gold-light); font-weight: bold; }
-        
-        .form-control { width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; font-size: 1rem; border-radius: 8px; }
-        .form-control:focus { outline: none; border-color: var(--gold); }
-
-        /* Product Table */
-        .admin-products-table { width: 100%; margin-top: 20px; border-collapse: collapse; background: rgba(255,255,255,0.05); }
-        .admin-products-table th, .admin-products-table td { padding: 15px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .admin-products-table th { color: var(--gold); font-family: 'Playfair Display', serif; }
-
-        /* Image Preview */
-        .image-preview-container { position: relative; width: 100px; height: 133px; margin-bottom: 10px; border-radius: 8px; overflow: hidden; background: #ddd; }
-        
-        .image-preview-container img { width: 100%; height: 100%; object-fit: cover; display: none; }
-        .image-preview-container img[src] { display: block; }
-
-        /* Cart & Footer Styles */
-        .cart-overlay { position: fixed; top: 0; right: -100%; width: 400px; max-width: 100%; height: 100vh; background: var(--dark); z-index: 2000; transition: right 0.4s ease-in-out; padding: 30px; display: flex; flex-direction: column; box-shadow: -5px 0 20px rgba(0,0,0,0.5); }
-        .cart-overlay.active { right: 0; }
-
-        .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        
-        .close-cart { background: none; border: none; color: var(--white); font-size: 1.5rem; cursor: pointer; }
-
-        #cart-items-container { flex-grow: 1; overflow-y: auto; margin-bottom: 20px; }
-
-        .cart-item { display: flex; align-items: center; margin-bottom: 15px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; }
-        
-        .cart-item-info { flex-grow: 1; margin-left: 10px; }
-        
-        .cart-item-title { font-size: 0.9rem; color: var(--white); }
-        
-        .cart-item-price { font-size: 0.85rem; color: var(--gold-light); }
-
-        .remove-btn-cart { background: var(--primary); border: none; color: white; font-size: 0.7rem; padding: 3px 8px; cursor: pointer; margin-left: auto; }
-
-        .cart-footer { margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
-        
-        .total-price { display: flex; justify-content: space-between; font-size: 1.3rem; color: var(--white); margin-bottom: 20px; }
-        
-        .checkout-btn { width: 100%; padding: 15px; background: #25D366; border: none; color: white; font-weight: bold; font-size: 1rem; border-radius: 8px; cursor: pointer; transition: opacity 0.3s; }
-        .checkout-btn:hover { opacity: 0.9; }
-
-        /* Footer */
-        footer { text-align: center; padding: 40px; color: rgba(255,255,255,0.5); font-size: 0.9rem; margin-top: 60px; }
-        
-        @media (max-width: 768px) { .hero h1 { font-size: 2.5rem; } .cart-overlay { width: 100%; } .nav-links { display: none; } .admin-modal { padding: 20px; } }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beauty's Collection</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#fdfdfd; }
+    header { background:#e6b8c3; padding:20px; text-align:center; }
+    nav { background:#333; padding:10px; text-align:center; }
+    nav a { color:#fff; margin:0 15px; text-decoration:none; }
+    .products { display:flex; flex-wrap:wrap; justify-content:center; padding:20px; }
+    .product { border:1px solid #ddd; border-radius:5px; margin:15px; width:250px; text-align:center; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+    .product img { width:100%; height:auto; border-bottom:1px solid #ddd; }
+    .product h3 { margin:10px 0; }
+    .cart { background:#f4f4f4; padding:20px; }
+    .cart h2 { margin-top:0; }
+    .cart-items { margin-bottom:15px; }
+    .checkout-btn { background:#e6b8c3; border:none; padding:10px 20px; cursor:pointer; font-size:16px; }
+    .upload-form { background:#fff3f7; padding:20px; margin:20px; border:1px solid #ddd; }
+    .upload-form input { margin:5px; padding:8px; }
+  </style>
 </head>
 <body>
 
-    <!-- Navigation -->
-    <nav>
-        <div class="nav-container">
-            <a href="#" class="logo" onclick="switchMode('public')">VASTRA</a>
-            
-            <div class="nav-links">
-                <a href="#home">Home</a>
-                <a href="#products">Sarees</a>
-                <a href="#jewelry">Jewelry</a>
-                <a href="#embroidery">Embroidery</a>
-            </div>
+  <header>
+    <h1>Beauty's Collection</h1>
+    <p>Sarees • Jewellery • Embroidery</p>
+  </header>
 
-            <div class="admin-link" onclick="toggleAdminModal()">Seller Admin 🔒</div>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">Sarees</a>
+    <a href="#">Jewellery</a>
+    <a href="#">Embroidery</a>
+    <a href="#">Contact</a>
+  </nav>
 
-            <div class="cart-icon" onclick="toggleCart()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--gold)"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 2.68a16 16 0 0 0 5.14 5.62c2 2.57 4.39 4.85 6.85 6.55L22 13l-1-1z"></path></svg>
-                <span class="cart-count" id="cart-count">0</span>
-            </div>
-        </div>
-    </nav>
+  <!-- Upload Form (visible only to owner if auth is added) -->
+  <section class="upload-form">
+    <h2>Add New Product</h2>
+    <input type="text" id="product-name" placeholder="Product Name">
+    <input type="text" id="product-price" placeholder="Price (₹)">
+    <input type="text" id="product-image" placeholder="Image URL">
+    <button onclick="addNewProduct()">Upload Product</button>
+  </section>
 
-    <!-- Cart Sidebar -->
-    <div class="cart-overlay" id="cart-overlay">
-        <div class="cart-header">
-            <h2>Your Bag</h2>
-            <button class="close-cart" onclick="toggleCart()">&times;</button>
-        </div>
-        <div id="cart-items-container">
-            <!-- Items added here by JS -->
-            <p style="text-align:center; color:var(--white); opacity:0.7;">Your cart is empty.</p>
-        </div>
-        <div class="cart-footer">
-            <div class="total-price">
-                <span>Total:</span>
-                <span id="cart-total">₹0</span>
-            </div>
-            <button class="checkout-btn" onclick="checkoutWhatsApp()">Checkout via WhatsApp</button>
-        </div>
-    </div>
+  <!-- Product List -->
+  <section class="products" id="products"></section>
 
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="hero-content">
-            <h1>Redefine Your <br><span>Indian Elegance</span></h1>
-            <p>Premium Banarasi Sarees, Exquisite Handcrafted Jewels, and Intricate Computer Embroidery.</p>
-            <a href="#products" class="cta-btn">Explore Collection</a>
-        </div>
-    </section>
+  <!-- Cart -->
+  <section class="cart">
+    <h2>Your Cart</h2>
+    <div class="cart-items" id="cart-items"></div>
+    <button class="checkout-btn" onclick="checkout()">Checkout via WhatsApp</button>
+  </section>
 
-    <!-- Products Section -->
-    <section class="featured" id="products">
-        <h2 class="section-title">Curated Collection</h2>
-        
-        <div class="product-grid" id="product-list">
-            <!-- Products injected by JS -->
-        </div>
-    </section>
+  <footer>
+    <p>&copy; 2026 Beauty's Collection. All rights reserved.</p>
+  </footer>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2023 Vastra - Authentic Indian Artistry. All rights reserved.</p>
-        <p style="font-size: 0.7rem; margin-top: 10px;">Seller Admin Access Required for Full Product Management</p>
-    </footer>
+  <!-- Supabase Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const { createClient } = supabase;
+    const supabaseUrl = "https://YOUR_PROJECT_URL.supabase.co";
+    const supabaseKey = "YOUR_ANON_KEY"; // Replace with your Supabase anon key
+    const supabaseClient = createClient(supabaseUrl, supabaseKey);
 
-    <!-- ADMIN LOGIN MODAL -->
-    <div id="admin-login-modal" class="admin-modal">
-        <div class="admin-header">
-            <h2>Seller Login 🔒</h2>
-            <button class="close-cart" onclick="toggleAdminModal()" style="background:none;border:none;color:white;font-size:1.5rem;cursor:pointer;">&times;</button>
-        </div>
-        <form onsubmit="handleLogin(event)" id="admin-login-form">
-            <div class="form-group">
-                <label>Seller Password</label>
-                <input type="password" id="seller-password" class="form-control" placeholder="Enter password" required>
-            </div>
-            <button type="submit" class="btn-primary" style="width:100%">Login as Seller</button>
-        </form>
-    </div>
+    let cart = [];
 
-    <!-- ADMIN PRODUCT MANAGEMENT MODAL -->
-    <div id="admin-product-modal" class="admin-modal">
-        <div class="admin-header">
-            <h2>Add/Edit Product ✨</h2>
-            <button class="btn-danger" onclick="toggleAdminModal()">Cancel</button>
-        </div>
+    function addToCart(name, price) {
+      cart.push({name, price});
+      displayCart();
+    }
 
-        <!-- ADD NEW PRODUCT FORM -->
-        <div id="add-product-form" style="display:none; margin-bottom:30px; border-bottom:1px solid var(--accent); padding-bottom:20px;">
-            <h4 style="margin-bottom:15px;color:var(--gold-light)">Add New Product</h4>
-            <div class="form-group">
-                <label>Product Name</label>
-                <input type="text" id="new-product-name" class="form-control" placeholder="e.g., Red Velvet Banarasi" required>
-            </div>
-            <div class="form-group">
-                <label>Category (Saree/Jewelry/Embroidery)</label>
-                <select id="new-product-category" class="form-control">
-                    <option value="Saree">Saree</option>
-                    <option value="Jewelry">Jewelry</option>
-                    <option value="Embroidery">Embroidery</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Price (₹)</label>
-                <input type="number" id="new-product-price" class="form-control" placeholder="e.g., 8500" required>
-            </div>
-            <div class="form-group">
-                <label>Image URL (Optional - Leave blank for default CSS pattern)</label>
-                <input type="url" id="new-product-image" class="form-control" placeholder="https://example.com/image.jpg">
-            </div>
-            <button class="btn-primary" onclick="addNewProduct()">Add Product</button>
-        </div>
+    function displayCart() {
+      const cartItemsDiv = document.getElementById('cart-items');
+      cartItemsDiv.innerHTML = '';
+      cart.forEach((item, index) => {
+        cartItemsDiv.innerHTML += `<p>${index+1}. ${item.name} - ₹${item.price}</p>`;
+      });
+    }
 
-        <!-- EDIT PRODUCT FORM -->
-        <div id="edit-product-form" style="display:none; margin-bottom:30px; border-bottom:1px solid var(--accent); padding-bottom:20px;">
-            <h4 style="margin-bottom:15px;color:var(--gold-light)">Edit Product</h4>
-            <div class="form-group">
-                <label>Product Name</label>
-                <input type="text" id="edit-product-name" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label>Category (Saree/Jewelry/Embroidery)</label>
-                <select id="edit-product-category" class="form-control">
-                    <option value="Saree">Saree</option>
-                    <option value="Jewelry">Jewelry</option>
-                    <option value="Embroidery">Embroidery</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Price (₹)</label>
-                <input type="number" id="edit-product-price" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label>Image URL</label>
-                <input type="url" id="edit-product-image" class="form-control">
-            </div>
-            <button class="btn-primary" onclick="saveEditProduct()">Save Changes</button>
-            <button class="btn-danger" style="margin-top:10px" onclick="clearEditForm()">Cancel</button>
-        </div>
+    function checkout() {
+      if(cart.length === 0) {
+        alert("Your cart is empty!");
+        return;
+      }
+      let message = "Hello, I'd like to order:\n";
+      cart.forEach((item, index) => {
+        message += `${index+1}. ${item.name} - ₹${item.price}\n`;
+      });
 
-        <!-- VIEW PRODUCTS TABLE -->
-        <h3 style="color:white;margin-bottom:15px; font-family:'Playfair Display',serif;">Current Products in Database</h3>
-        <table class="admin-products-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Category</th>
-                    <th>Price</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="admin-products-table-body"></tbody>
-        </table>
+      const numbers = ["8015517625", "8838752820"];
+      const chosenNumber = numbers[Math.floor(Math.random() * numbers.length)];
+      const url = `https://wa.me/${chosenNumber}?text=${encodeURIComponent(message)}`;
+      window.open(url, "_blank");
+    }
 
-        <button class="btn-primary" onclick="toggleAddEditMode()" style="margin-top:30px; width:100%;">Switch to Add/Edit Mode</button>
-    </div>
+    async function addNewProduct() {
+      const name = document.getElementById('product-name').value;
+      const price = document.getElementById('product-price').value;
+      const image = document.getElementById('product-image').value;
 
-    <!-- LOGIC SCRIPT -->
-    <script>
-        // --- 1. Product Data (Simulated Database with LocalStorage) ---
-        
-        // Check if admin is logged in
-        let isAdminLoggedIn = false;
-        const ADMIN_PASSWORD = "admin123"; // SECURITY WARNING: Change this password and move to backend later!
+      if(!name || !price || !image) {
+        alert("Please fill all fields!");
+        return;
+      }
 
-        function getProducts() {
-            return JSON.parse(localStorage.getItem('vastra_products')) || products;
-        }
+      const { data, error } = await supabaseClient
+        .from('products')
+        .insert([{ name, price, image_url: image }]);
 
-        function saveProducts(products) {
-            localStorage.setItem('vastra_products', JSON.stringify(products));
-        }
+      if(error) {
+        alert("Error uploading product: " + error.message);
+      } else {
+        alert("Product uploaded successfully!");
+        loadProducts();
+      }
+    }
 
-        // --- 2. State Management (The Cart) ---
-        let cart = [];
-        let isAdminLoggedIn = false;
+    async function loadProducts() {
+      const { data, error } = await supabaseClient
+        .from('products')
+        .select('*');
 
-        // --- 3. Render Products to DOM ---
-        const productContainer = document.getElementById('product-list');
+      if(error) {
+        console.error(error);
+        return;
+      }
 
-        function renderProducts() {
-            productContainer.innerHTML = '';
-            const productsData = getProducts(); // Fetches from localStorage if available
-            
-            productsData.forEach(product => {
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                card.dataset.id = product.id;
+      const productsDiv = document.getElementById('products');
+      productsDiv.innerHTML = '';
+      data.forEach(product => {
+        productsDiv.innerHTML += `
+          <div class="product">
+            <img src="${product.image_url}" alt="${product.name}">
+            <h3>${product.name}</h3>
+            <p>₹${product.price}</p>
+            <button onclick="addToCart('${product.name}', '${product.price}')">Add to Cart</button>
+          </div>
+        `;
+      });
+    }
 
-                const imageSrc = product.imageURL || ''; // Use real image or CSS gradient
-                
-                card.innerHTML = `
-                    <div class="product-image-wrapper ${getCategoryClass(product.category)}">
-                        ${imageSrc ? `<img src="${imageSrc}" alt="${product.name}" onerror="this.parentElement.classList.add('default-bg'); this.parentElement.style.background='linear-gradient(45deg, var(--primary), var(--secondary))'">${product.name}</img>` : ''}
-                        <span class="default-bg-text" style="display:none;font-size:3rem;">✨</span>
-                    </div>
-                    <div class="product-info">
-                        <div>
-                            <div class="product-category">${product.category}</div>
-                            <h3 class="product-title">${product.name}</h3>
-                        </div>
-                        <div>
-                            <div class="product-price">₹${formatNumber(product.price)}</div>
-                            ${isAdminLoggedIn ? 
-                                `<button class="edit-btn" onclick="preselectEdit(${product.id})">Edit</button>` : 
-                                `<button class="add-to-cart" onclick="addToCart(${product.id})">Add to Cart</button>`
-                            }
-                            ${isAdminLoggedIn ? 
-                                `<button class="delete-btn" onclick="deleteProduct(${product.id})">Delete</button>` : ''}
-                        </div>
-                    </div>
-                `;
-                productContainer.appendChild(card);
-            });
-        }
+    loadProducts(); // Load products on page load
+  </script>
 
-        function getCategoryClass(cat) {
-            return cat === 'Jewelry' ? 'jewelry-bg' : 'saree-bg';
-        }
-
-        // --- 4. Cart Logic (Seller/Admin Access) ---
-        function toggleCart() {
-            const overlay = document.getElementById('cart-overlay');
-            if (overlay.classList.contains('active')) {
-                overlay.classList.remove('active');
-            } else {
-                overlay.classList.add('active');
-            }
-        }
-
-        function addToCart(id) {
-            const productsData = getProducts(); // Get current data from localStorage
-            const product = productsData.find(p => p.id === id);
-            
-            cart.push(product);
-            updateCartUI();
-            
-            document.querySelector('.add-to-cart').innerText = "Added!";
-            setTimeout(() => {
-                document.querySelector('.add-to-cart').innerText = "Add to Cart";
-            }, 1000);
-        }
-
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            updateCartUI();
-        }
-
-        function updateCartUI() {
-            const container = document.getElementById('cart-items-container');
-            const countBadge = document.getElementById('cart-count');
-            const totalDisplay = document.getElementById('cart-total');
-            
-            countBadge.innerText = cart.length;
-            const total = cart.reduce((sum, item) => sum + item.price, 0);
-            totalDisplay.innerText = `₹${formatNumber(total)}`;
-
-            container.innerHTML = '';
-            if (cart.length === 0) {
-                container.innerHTML = '<p style="text-align:center; color:var(--white); opacity:0.7; margin-top:20px;">Your cart is empty.</p>';
-                return;
-            }
-
-            cart.forEach((item, index) => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'cart-item';
-                itemDiv.innerHTML = `
-                    <span class="remove-btn-cart" onclick="removeFromCart(${index})">Remove</span>
-                    <div class="cart-item-info">
-                        <div class="cart-item-title">${item.name}</div>
-                        <div class="cart-item-price">₹${formatNumber(item.price)}</div>
-                    </div>
-                `;
-                container.appendChild(itemDiv);
-            });
-        }
-
-        function checkoutWhatsApp() {
-            if (cart.length === 0) { alert("Please add items to your cart first."); return; }
-
-            let message = "*Hello Vasstra! I want to place an order:*%0a%0a";
-            let total = 0;
-
-            cart.forEach(item => {
-                message += `🛍️ ${item.name}%0a` +
-                        `💰 ₹${formatNumber(item.price)}%0a%0a`;
-                total += item.price;
-            });
-
-            message += `*Total Price: ₹${formatNumber(total)}*%0a%0a`;
-            message += "Please confirm the items and share your delivery address.";
-
-            const phoneNumber = "919876543210"; 
-            const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`;
-
-            window.open(whatsappUrl, '_blank').focus();
-        }
-
-        function formatNumber(num) {
-            return num.toLocaleString('en-IN');
-        }
-
-        // --- 5. Admin Panel Logic (SOLDIER ACCESS ONLY) ---
-
-        function toggleAdminModal() {
-            const modal = document.getElementById('admin-login-modal');
-            
-            if (isAdminLoggedIn) {
-                modal.classList.remove('active');
-                isAdminLoggedIn = false;
-                return;
-            }
-
-            // Check if already logged in (localStorage)
-            const savedLogin = localStorage.getItem('vastra_admin_logged_in');
-            if (savedLogin === 'true') {
-                modal.classList.add('active');
-                isAdminLoggedIn = true;
-                document.getElementById('seller-password').value = '';
-                return;
-            }
-
-            modal.classList.add('active');
-        }
-
-        function handleLogin(event) {
-            event.preventDefault();
-            const password = document.getElementById('seller-password').value;
-
-            if (password === ADMIN_PASSWORD) {
-                localStorage.setItem('vastra_admin_logged_in', 'true');
-                toggleAdminModal(); // Closes modal and logs in
-                
-                alert("Welcome, Seller! Admin access granted.");
-                
-                // Switch modes for the seller
-                document.getElementById('add-product-form').style.display = 'none';
-                document.getElementById('edit-product-form').style.display = 'none';
-                document.getElementById('admin-products-table-body').innerHTML = '';
-            } else {
-                alert("❌ Incorrect Password!");
-            }
-        }
-
-        function addNewProduct() {
-            const name = document.getElementById('new-product-name').value;
-            const category = document.getElementById('new-product-category').value;
-            const price = parseInt(document.getElementById('new-product-price').value);
-            let image = document.getElementById('new-product-image').value || null;
-
-            if (!name || !price) {
-                alert("Please fill in all required fields.");
-                return;
-            }
-
-            const productsData = getProducts();
-            const newId = productsData.length > 0 ? Math.max(...productsData.map(p => p.id)) + 1 : 1;
-
-            const newProduct = {
-                id: newId,
-                name: name,
-                category: category,
-                price: price,
-                imageURL: image
-            };
-
-            productsData.push(newProduct);
-            saveProducts(productsData);
-
-            clearAddForm();
-            renderProducts(); // Refresh display
-        }
-
-        function preselectEdit(id) {
-            const productsData = getProducts();
-            const productIndex = productsData.findIndex(p => p.id === id);
-            
-            if (productIndex === -1) return;
-
-            document.getElementById('edit-product-name').value = productsData[productIndex].name;
-            document.getElementById('edit-product-category').value = productsData[productIndex].category;
-            document.getElementById('edit-product-price').value = productsData[productIndex].price;
-            document.getElementById('edit-product-image').value = productsData[productIndex].imageURL || '';
-
-            clearAddForm();
-            document.getElementById('add-product-form').style.display = 'none';
-            document.getElementById('edit-product-form').style.display = 'block';
-        }
-
-        function saveEditProduct() {
-            const productsData = getProducts();
-            const id = parseInt(document.getElementById('edit-product-name').value); // ID from name input for simplicity
-            
-            if (id <= 0 || isNaN(id)) return;
-
-            const index = productsData.findIndex(p => p.id === id);
-            
-            if (index !== -1) {
-                productsData[index].name = document.getElementById('edit-product-name').value;
-                productsData[index].category = document.getElementById('edit-product-category').value;
-                productsData[index].price = parseInt(document.getElementById('edit-product-price').value);
-                productsData[index].imageURL = document.getElementById('edit-product-image').value || null;
-
-                saveProducts(productsData);
-                clearEditForm();
-                renderProducts();
-            }
-        }
-
-        function clearAddForm() {
-            document.getElementById('add-product-form').style.display = 'block';
-            document.getElementById('edit-product-form').style.display = 'none';
-            document.getElementById('new-product-name').value = '';
-            document.getElementById('new-product-price').value = '';
-            document.getElementById('new-product-image').value = '';
-        }
-
-        function clearEditForm() {
-            document.getElementById('add-product-form').style.display = 'block';
-            document.getElementById('edit-product-form').style.display = 'none';
-            document.getElementById('edit-product-name').value = '';
-            document.getElementById('edit-product-price').value = '';
-            document.getElementById('edit-product-image').value = '';
-        }
-
-        function toggleAddEditMode() {
-            if (document.getElementById('add-product-form').style.display === 'none') {
-                clearAddForm();
-                renderProducts(); // Refresh for seller view with edit/delete buttons
-            } else {
-                renderProducts(); // Back to public mode
-            }
-        }
-
-        function switchMode(mode) {
-            if (mode === 'admin' && !isAdminLoggedIn) return;
-
-            const productsData = getProducts();
-            
-            // Re-render all cards in the DOM with correct visibility for each element
-            const productCards = document.querySelectorAll('.product-card');
-            
-            productsData.forEach((product, index) => {
-                productCards[index].querySelector('.add-to-cart').remove();
-                
-                if (isAdminLoggedIn) {
-                    productCards[index].innerHTML += `
-                        <button class="edit-btn" onclick="preselectEdit(${product.id})">Edit</button>
-                        <button class="delete-btn" onclick="deleteProduct(${product.id})">Delete</button>
-                    `;
-                } else {
-                    const btn = productCards[index].querySelector('.add-to-cart');
-                    if(btn) {
-                        btn.removeAttribute('onclick');
-                        btn.innerText = 'Add to Cart';
-                    }
-                }
-            });
-
-            renderProducts(); // Final render for all elements
-        }
-
-        function deleteProduct(id) {
-            const productsData = getProducts();
-            
-            if (confirm("Are you sure you want to delete this product? This cannot be undone.")) {
-                productsData = productsData.filter(p => p.id !== id);
-                saveProducts(productsData);
-                renderProducts();
-            }
-        }
-
-        // --- 6. Initialize on Load ---
-        (function init() {
-            const savedLogin = localStorage.getItem('vastra_admin_logged_in');
-            
-            if (savedLogin === 'true') {
-                isAdminLoggedIn = true;
-                toggleAdminModal(); // Login automatically after loading
-            } else {
-                renderProducts(); // Public view initially
-            }
-        })();
-
-    </script>
 </body>
 </html>
