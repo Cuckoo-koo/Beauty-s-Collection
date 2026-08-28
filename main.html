@@ -9,57 +9,55 @@
 
     /* Hero Section */
     .hero {
-      background: linear-gradient(135deg, #f8cdda, #f1a7f1);
-      text-align:center; padding:80px 20px; color:#fff;
+      background: linear-gradient(135deg, #f9d5e5, #e6b8c3);
+      text-align:center; padding:80px 20px; color:#5a2a5a;
     }
-    .hero h1 { font-size:3em; margin-bottom:10px; }
-    .hero p { font-size:1.2em; margin-bottom:20px; }
+    .hero h1 { font-size:3em; margin-bottom:10px; color:#5a2a5a; }
+    .hero p { font-size:1.2em; margin-bottom:20px; color:#5a2a5a; }
     .shop-btn {
-      background:#fff; color:#d6336c; border:none; padding:12px 25px;
+      background:#5a2a5a; color:#fff; border:none; padding:12px 25px;
       font-size:18px; border-radius:30px; cursor:pointer; transition:0.3s;
     }
-    .shop-btn:hover { background:#d6336c; color:#fff; }
+    .shop-btn:hover { background:#e6b8c3; color:#5a2a5a; }
 
     /* Navigation */
-    nav { background:#333; padding:12px; text-align:center; }
+    nav { background:#5a2a5a; padding:12px; text-align:center; }
     nav a { color:#fff; margin:0 15px; text-decoration:none; font-weight:500; }
-    nav a:hover { color:#f8cdda; }
+    nav a:hover { color:#f9d5e5; }
 
-    /* Products Grid */
+    /* Product Cards */
     .products { display:flex; flex-wrap:wrap; justify-content:center; padding:40px 20px; }
     .product {
       border-radius:12px; overflow:hidden; transition:transform 0.3s;
       margin:15px; width:260px; background:#fff; box-shadow:0 4px 12px rgba(0,0,0,0.1);
     }
     .product:hover { transform:scale(1.05); box-shadow:0 8px 20px rgba(0,0,0,0.15); }
-    .product img { width:100%; height:auto; }
-    .product h3 { margin:15px 0 5px; font-size:1.2em; }
+    .product h3 { margin:15px 0 5px; font-size:1.2em; color:#5a2a5a; }
     .product p { margin:0 0 10px; color:#555; }
     .product button {
-      background:#d6336c; color:#fff; border:none; padding:10px 20px;
+      background:#e6b8c3; color:#5a2a5a; border:none; padding:10px 20px;
       margin-bottom:15px; border-radius:25px; cursor:pointer; transition:0.3s;
     }
-    .product button:hover { background:#a61e4d; }
+    .product button:hover { background:#5a2a5a; color:#fff; }
 
     /* Cart */
-    .cart { background:#f4f4f4; padding:30px; text-align:center; }
-    .cart h2 { margin-top:0; }
+    .cart { background:#f9d5e5; padding:30px; text-align:center; }
     .checkout-btn {
-      background:#d6336c; color:#fff; border:none; padding:12px 25px;
+      background:#5a2a5a; color:#fff; border:none; padding:12px 25px;
       font-size:18px; border-radius:30px; cursor:pointer; transition:0.3s;
     }
-    .checkout-btn:hover { background:#a61e4d; }
+    .checkout-btn:hover { background:#e6b8c3; color:#5a2a5a; }
 
-    /* Upload Form (admin only) */
-    .upload-form { background:#fff3f7; padding:20px; margin:20px; border:1px solid #ddd; border-radius:12px; }
+    /* Upload Form (hidden unless logged in) */
+    .upload-form { background:#fff3f7; padding:20px; margin:20px; border:1px solid #ddd; border-radius:12px; display:none; }
     .upload-form input { margin:5px; padding:10px; border-radius:8px; border:1px solid #ccc; }
     .upload-form button {
-      background:#d6336c; color:#fff; border:none; padding:10px 20px;
+      background:#5a2a5a; color:#fff; border:none; padding:10px 20px;
       border-radius:25px; cursor:pointer; transition:0.3s;
     }
-    .upload-form button:hover { background:#a61e4d; }
+    .upload-form button:hover { background:#e6b8c3; color:#5a2a5a; }
 
-    footer { background:#333; color:#fff; text-align:center; padding:20px; margin-top:40px; }
+    footer { background:#5a2a5a; color:#fff; text-align:center; padding:20px; margin-top:40px; }
   </style>
 </head>
 <body>
@@ -80,8 +78,8 @@
     <a href="#">Contact</a>
   </nav>
 
-  <!-- Upload Form (admin use) -->
-  <section class="upload-form">
+  <!-- Upload Form (only visible if logged in) -->
+  <section class="upload-form" id="upload-form">
     <h2>Add New Product</h2>
     <input type="text" id="product-name" placeholder="Product Name">
     <input type="text" id="product-price" placeholder="Price (₹)">
@@ -108,7 +106,7 @@
   <script>
     const { createClient } = supabase;
     const supabaseUrl = "https://YOUR_PROJECT_URL.supabase.co";
-    const supabaseKey = "YOUR_ANON_KEY"; // Replace with your Supabase anon key
+    const supabaseKey = "YOUR_ANON_KEY"; 
     const supabaseClient = createClient(supabaseUrl, supabaseKey);
 
     let cart = [];
@@ -188,7 +186,16 @@
       });
     }
 
-    loadProducts(); // Load products on page load
+    // Show upload form only if logged in
+    async function checkAuth() {
+      const { data: { user } } = await supabaseClient.auth.getUser();
+      if(user) {
+        document.getElementById('upload-form').style.display = 'block';
+      }
+    }
+
+    loadProducts();
+    checkAuth();
   </script>
 
 </body>
