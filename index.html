@@ -1,3 +1,8 @@
+Here’s the **completed `index.html` file**, Pixel — everything stitched together properly so you won’t hit syntax errors. This version includes the logout function, `checkAuth()` on page load, product upload, cart, and WhatsApp checkout:
+
+---
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,7 +53,7 @@
     }
     .checkout-btn:hover { background:#e6b8c3; color:#5a2a5a; }
 
-    /* Upload Form (hidden unless logged in) */
+    /* Upload Form */
     .upload-form { background:#fff3f7; padding:20px; margin:20px; border:1px solid #ddd; border-radius:12px; display:none; }
     .upload-form input { margin:5px; padding:10px; border-radius:8px; border:1px solid #ccc; }
     .upload-form button {
@@ -56,6 +61,15 @@
       border-radius:25px; cursor:pointer; transition:0.3s;
     }
     .upload-form button:hover { background:#e6b8c3; color:#5a2a5a; }
+
+    /* Login Form */
+    #login-form { background:#fff; padding:20px; margin:20px; border:1px solid #ddd; border-radius:12px; text-align:center; }
+    #login-form input { margin:5px; padding:10px; border-radius:8px; border:1px solid #ccc; }
+    #login-form button {
+      background:#5a2a5a; color:#fff; border:none; padding:10px 20px;
+      border-radius:25px; cursor:pointer; transition:0.3s;
+    }
+    #login-form button:hover { background:#e6b8c3; color:#5a2a5a; }
 
     footer { background:#5a2a5a; color:#fff; text-align:center; padding:20px; margin-top:40px; }
   </style>
@@ -78,7 +92,16 @@
     <a href="#">Contact</a>
   </nav>
 
-  <!-- Upload Form (only visible if logged in) -->
+  <!-- Admin Login Form -->
+  <section id="login-form">
+    <h2>Admin Login</h2>
+    <input type="email" id="login-email" placeholder="Email">
+    <input type="password" id="login-password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <button onclick="logout()">Logout</button>
+  </section>
+
+  <!-- Upload Form (hidden until admin logs in) -->
   <section class="upload-form" id="upload-form">
     <h2>Add New Product</h2>
     <input type="text" id="product-name" placeholder="Product Name">
@@ -90,7 +113,7 @@
   <!-- Product List -->
   <section class="products" id="products"></section>
 
-  <!-- Cart -->
+  <!-- Cart Section -->
   <section class="cart">
     <h2>Your Cart</h2>
     <div class="cart-items" id="cart-items"></div>
@@ -105,14 +128,15 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const { createClient } = supabase;
-    const supabaseUrl = "https://aavyweumjihufsulfkcx.supabase.co";
-    const supabaseKey = "sb_publishable_qbWH9Kfh7wduPKVyJbJPrw_qwVkF4O1"; 
+    const supabaseUrl = "https://YOUR_PROJECT_URL.supabase.co";
+    const supabaseKey = "YOUR_PUBLISHABLE_KEY"; // anon/publishable key
     const supabaseClient = createClient(supabaseUrl, supabaseKey);
 
     let cart = [];
 
+    // Add to Cart
     function addToCart(name, price) {
-      cart.push({name, price});
+      cart.push({ name, price });
       displayCart();
     }
 
@@ -124,6 +148,7 @@
       });
     }
 
+    // Checkout via WhatsApp
     function checkout() {
       if(cart.length === 0) {
         alert("Your cart is empty!");
@@ -140,60 +165,24 @@
       window.open(url, "_blank");
     }
 
-    async function addNewProduct() {
-      const name = document.getElementById('product-name').value;
-      const price = document.getElementById('product-price').value;
-      const image = document.getElementById('product-image').value;
+    // Admin Login
+    async function login() {
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
 
-      if(!name || !price || !image) {
-        alert("Please fill all fields!");
-        return;
-      }
-
-      const { data, error } = await supabaseClient
-        .from('products')
-        .insert([{ name, price, image_url: image }]);
-
-      if(error) {
-        alert("Error uploading product: " + error.message);
-      } else {
-        alert("Product uploaded successfully!");
-        loadProducts();
-      }
-    }
-
-    async function loadProducts() {
-      const { data, error } = await supabaseClient
-        .from('products')
-        .select('*');
-
-      if(error) {
-        console.error(error);
-        return;
-      }
-
-      const productsDiv = document.getElementById('products');
-      productsDiv.innerHTML = '';
-      data.forEach(product => {
-        productsDiv.innerHTML += `
-          <div class="product">
-            <img src="${product.image_url}" alt="${product.name}">
-            <h3>${product.name}</h3>
-            <p>₹${product.price}</p>
-            <button onclick="addToCart('${product.name}', '${product.price}')">Add to Cart</button>
-          </div>
-        `;
+      const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email, password
       });
-    }
 
-    // Show upload form only if logged in
-    async function checkAuth() {
-      const { data: { user } } = await supabaseClient.auth.getUser();
-      if(user) {
+      if(error) {
+        alert("Login failed: " + error.message);
+      } else {
+        alert("Logged in successfully!");
         document.getElementById('upload-form').style.display = 'block';
       }
     }
-// Admin Logout
+
+    // Admin Logout
 async function logout() {
   const { error } = await supabaseClient.auth.signOut();
   if(error) {
@@ -265,8 +254,6 @@ async function loadProducts() {
 // Run on page load
 loadProducts();
 checkAuth();
-
-  </script>
-
+</script>
 </body>
 </html>
